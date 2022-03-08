@@ -10,6 +10,7 @@ from .gamma_robust_variational_elbo import GammaRobustVariationalELBO
 from .inducing_point_kernel_added_loss_term import InducingPointKernelAddedLossTerm
 from .kl_gaussian_added_loss_term import KLGaussianAddedLossTerm
 from .leave_one_out_pseudo_likelihood import LeaveOneOutPseudoLikelihood
+from .lls_gp_loss_term import LLSGPLossTerm
 from .marginal_log_likelihood import MarginalLogLikelihood
 from .noise_model_added_loss_term import NoiseModelAddedLossTerm
 from .predictive_log_likelihood import PredictiveLogLikelihood
@@ -22,7 +23,8 @@ class VariationalMarginalLogLikelihood(VariationalELBO):
     def __init__(self, *args, **kwargs):
         # Remove after 1.0
         warnings.warn(
-            "VariationalMarginalLogLikelihood is deprecated. Please use VariationalELBO instead.", DeprecationWarning
+            "VariationalMarginalLogLikelihood is deprecated. Please use VariationalELBO instead.",
+            DeprecationWarning,
         )
         super().__init__(*args, **kwargs)
 
@@ -30,7 +32,10 @@ class VariationalMarginalLogLikelihood(VariationalELBO):
 class VariationalELBOEmpirical(VariationalELBO):
     def __init__(self, *args, **kwargs):
         # Remove after 1.0
-        warnings.warn("VariationalELBOEmpirical is deprecated. Please use VariationalELBO instead.", DeprecationWarning)
+        warnings.warn(
+            "VariationalELBOEmpirical is deprecated. Please use VariationalELBO instead.",
+            DeprecationWarning,
+        )
         super().__init__(*args, **kwargs)
 
 
@@ -41,6 +46,7 @@ __all__ = [
     "ExactMarginalLogLikelihood",
     "InducingPointKernelAddedLossTerm",
     "LeaveOneOutPseudoLikelihood",
+    "LLSGPLossTerm",
     "KLGaussianAddedLossTerm",
     "MarginalLogLikelihood",
     "NoiseModelAddedLossTerm",
