@@ -46,7 +46,7 @@ try:
             self.constraint = constraint
 
             self.raw_lengthscale_inducing = torch.nn.Parameter(
-                torch.zeros(
+                torch.ones(
                     inducing_points.shape[0],
                     dtype=inducing_points.dtype,
                     device=inducing_points.device,
@@ -55,13 +55,6 @@ try:
 
             self.likelihood = GaussianLikelihood()
 
-            self.latent_model = ExactGPModel(
-                self.inducing_points,
-                # None,
-                self.raw_lengthscale_inducing,
-                # None,
-                self.likelihood,
-            )
             self.register_added_loss_term("lls_gp_loss_term")
 
         def _nonkeops_covar_func(self, x1, x2, diag=False):
@@ -77,6 +70,13 @@ try:
             with torch.autograd.enable_grad():
                 if diag:
                     return self._nonkeops_covar_func(x1, x2, diag=True)
+                self.latent_model = ExactGPModel(
+                    self.inducing_points,
+                    # None,
+                    self.raw_lengthscale_inducing,
+                    # None,
+                    self.likelihood,
+                ).cuda()
                 self.latent_model.eval()
                 with settings.detach_test_caches(False):
                     l1_dist = self.latent_model.likelihood(self.latent_model(x1))
@@ -99,7 +99,7 @@ try:
                     # x1_ = KEOLazyTensor(x1[..., :, None, :])
                     # x2_ = KEOLazyTensor(x1[..., None, :, :])
                     x1_ = x1[..., :, None, :]
-                    x2_ = x1[..., None, :, :]
+                    x2_ = x2[..., None, :, :]
 
                     l1l2_sqr = (l1_ ** 2) + (l2_ ** 2)
                     x1x2_sqr = (x1_ - x2_) ** 2
